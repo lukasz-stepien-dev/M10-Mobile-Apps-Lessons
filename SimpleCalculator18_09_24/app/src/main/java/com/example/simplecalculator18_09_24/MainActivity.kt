@@ -6,10 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
@@ -37,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simplecalculator18_09_24.ui.theme.DarkRed
+import com.example.simplecalculator18_09_24.ui.theme.LightGreen
 import com.example.simplecalculator18_09_24.ui.theme.Red
 import com.example.simplecalculator18_09_24.ui.theme.SimpleCalculator18_09_24Theme
 import com.example.simplecalculator18_09_24.ui.theme.White
@@ -47,12 +50,15 @@ import com.example.simplecalculator18_09_24.ui.theme.White
         enableEdgeToEdge()
         setContent {
             SimpleCalculator18_09_24Theme {
+                Box(modifier = Modifier.fillMaxSize()
+                    .background(LightGreen))
                 HeaderCalc()
                 FactorA()
                 FactorB()
                 FactorC()
                 CheckboxPercentage()
                 BtnCalc {  }
+                CalcResult()
             }
         }
     }
@@ -150,3 +156,24 @@ import com.example.simplecalculator18_09_24.ui.theme.White
      }
  }
 
+@Composable
+ fun CalcResult(modifier: Modifier = Modifier, sum: Float = 0f, factorC: Int = 0, percentage: Float = 0f) {
+     Column(modifier = Modifier.padding(0.dp, 450.dp, 0.dp, 0.dp).fillMaxWidth()
+                            .height(100.dp)
+                            .background(DarkRed),
+         horizontalAlignment = Alignment.CenterHorizontally,
+         verticalArrangement = Arrangement.Center) {
+         Text(
+             text = "Suma liczb wynosi: $sum",
+             color = White
+         )
+         Text(
+             text = "c wynosi: $factorC",
+             color = White
+         )
+         Text(
+             text = "15% wartości wynosi $percentage",
+                color = White
+         )
+     }
+ }
