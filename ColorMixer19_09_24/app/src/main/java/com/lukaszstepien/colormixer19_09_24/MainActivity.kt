@@ -70,8 +70,8 @@ class MainActivity : ComponentActivity() {
                         Row(Modifier.padding(0.dp, 220.dp, 50.dp, 50.dp)) {
                             Column(
                                 modifier = Modifier.fillMaxWidth().height(180.dp),
-                                horizontalAlignment = Alignment.End,
-                                verticalArrangement = Arrangement.SpaceBetween,
+                                horizontalAlignment =  Alignment.End,
+                                verticalArrangement = Arrangement.SpaceBetween
                             ) {
                                 RedValue(value = redValue)
                                 GreenValue(value = greenValue)

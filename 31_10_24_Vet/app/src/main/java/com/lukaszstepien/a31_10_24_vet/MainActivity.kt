@@ -7,12 +7,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -49,8 +51,8 @@ class MainActivity : ComponentActivity() {
                     var animalAge by remember { mutableIntStateOf(0) }
                     var maxAnimalAge by remember { mutableFloatStateOf(0f) }
                     var purpose by remember { mutableStateOf("") }
-                    val timeState = rememberTimePickerState(16, 0, true);
-
+                    var timeState = rememberTimePickerState(16, 0, true);
+                    var showTimePicker = remember { mutableStateOf(false) }
                     // Set maxAnimalAge based on selectedAnimal
                     when (selectedAnimal) {
                         "Pies" -> maxAnimalAge = 18f
@@ -73,7 +75,18 @@ class MainActivity : ComponentActivity() {
                         AnimalAge(animalAge, selectedAnimal, maxAnimalAge, onAnimalAgeChanged = {
                             animalAge = it
                         })
-                        Purpose(purpose, timeState, onPurposeChanged = {purpose = it})
+                        Purpose(
+                            purpose,
+                            timeState,
+                            showTimePicker.value,
+                            onPurposeChanged = {purpose = it},
+                            onConfirm = {
+                                timeState = it
+                                showTimePicker.value = false
+                                        },
+                            onDismiss = {showTimePicker.value = false},
+                            onTimeClicked = {showTimePicker.value = true}
+                        )
                     }
                 }
             }
@@ -137,16 +150,49 @@ fun AnimalAge(animalAge: Int, animalSelected: String, maxAnimalAge: Float, onAni
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Purpose(purpose: String, timeState: TimePickerState, onPurposeChanged: (String) -> Unit) {
+fun Purpose(
+    purpose: String,
+    timeState: TimePickerState,
+    showTimePicker: Boolean,
+    onPurposeChanged: (String) -> Unit,
+    onConfirm: (TimePickerState) -> Unit,
+    onDismiss: () -> Unit,
+    onTimeClicked: () -> Unit
+) {
     TextField(
         modifier = Modifier.padding(0.dp, 340.dp, 0.dp, 0.dp).fillMaxWidth(),
         value = purpose,
         onValueChange = { onPurposeChanged(it) },
         label = { Text("Cel wizyty") },
     )
-    TimePicker(
-        modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp),
-        state = timeState,
 
+    TextField(
+        modifier = Modifier
+            .padding(0.dp, 460.dp, 0.dp, 0.dp)
+            .fillMaxWidth()
+            .clickable { onTimeClicked() }, // Correctly invoke the lambda
+        value = "${timeState.hour}:${timeState.minute}", // Use string interpolation for better readability
+        enabled = false,
+
+        onValueChange = {  },
     )
+
+    if (showTimePicker) {
+        Column {
+            TimePicker(
+                modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp),
+                state = timeState,
+            )
+            Button(onClick = onDismiss) {
+                Text("Dismiss")
+            }
+
+            Button(onClick = {
+                onConfirm(timeState)
+                onDismiss()
+            }) {
+                Text("Confirm")
+            }
+        }
+    }
 }
