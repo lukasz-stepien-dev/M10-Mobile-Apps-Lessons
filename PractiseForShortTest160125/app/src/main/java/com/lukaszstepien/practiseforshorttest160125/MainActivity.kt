@@ -92,6 +92,7 @@ fun TimerPickerDialog(
 
     TimePickerDialog(
         context,
+        3,
         { _, selectedHour, selectedMinute ->
             onConfirm(selectedHour, selectedMinute)
         },
